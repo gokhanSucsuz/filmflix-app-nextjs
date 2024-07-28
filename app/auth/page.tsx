@@ -5,6 +5,7 @@ import InputComponent from "../components/Input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const AuthPage = () => {
 	const [name, setName] = useState("");
@@ -21,14 +22,21 @@ const AuthPage = () => {
 	}, []);
 	const register = useCallback(async () => {
 		try {
-			console.log("register");
 		} catch (error) {}
 	}, []);
 	const login = useCallback(async () => {
 		try {
-			console.log("login");
-		} catch (error) {}
-	}, []);
+			await signIn("credentials", {
+				email,
+				password,
+				redirect: false,
+				callbackUrl: "/"
+			});
+			router.push("/profile");
+		} catch (error) {
+			console.log(error);
+		}
+	}, [email, password, router]);
 	return (
 		<div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
 			<div className="bg-black h-full w-full bg-opacity-45">
