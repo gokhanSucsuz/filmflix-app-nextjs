@@ -4,9 +4,9 @@ import Image from "next/image";
 import InputComponent from "../components/Input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const AuthPage = () => {
 	const [name, setName] = useState("");
@@ -21,11 +21,6 @@ const AuthPage = () => {
 			currentVariant === "login" ? "register" : "login"
 		);
 	}, []);
-	const register = useCallback(async () => {
-		try {
-			await axios = 
-		} catch (error) {}
-	}, []);
 	const login = useCallback(async () => {
 		try {
 			await signIn("credentials", {
@@ -39,6 +34,19 @@ const AuthPage = () => {
 			console.log(error);
 		}
 	}, [email, password, router]);
+	const register = useCallback(async () => {
+		try {
+			await axios.post("/api/register", {
+				email,
+				name,
+				password
+			});
+			login();
+		} catch (error) {
+			console.log(error);
+		}
+	}, [email, name, password, login]);
+
 	return (
 		<div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
 			<div className="bg-black h-full w-full bg-opacity-45">
@@ -56,7 +64,7 @@ const AuthPage = () => {
 						<h2 className="text-white text-3xl mb-8 font-bold">
 							{variant === "login" ? "Login" : "Register"}
 						</h2>
-						<div className="flex flex-col gap-4 ">
+						<div className="flex flex-col gap-4">
 							{variant === "register" && (
 								<InputComponent
 									id="fullName"
@@ -94,15 +102,13 @@ const AuthPage = () => {
 								<FaGithub size={20} />
 							</div>
 						</div>
-						<p className="text-neutral-600 my-8 ">
+						<p className="text-neutral-600 my-8">
 							{variant === "login"
 								? "First time using Filmflix?"
 								: "Already have an account"}
 							<span
 								onClick={toggleVariant}
-								className="text-white ml-2 cursor-pointer
-							hover:underline transition
-							">
+								className="text-white ml-2 cursor-pointer hover:underline transition">
 								{variant === "login" ? "Create an account" : "Login"}
 							</span>
 						</p>
